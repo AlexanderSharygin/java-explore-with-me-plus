@@ -1,14 +1,30 @@
+version: '3.8'
 services:
-  stats-server:
+  stat-service:
+    build: ./stats-service/stats-server
+    container_name: stats-server
     ports:
       - "9090:9090"
+    depends_on:
+      - db
+    environment:
+      - DB_NAME=statistic
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - DB_HOST=db
+      - DB_PORT=5432
 
-  stats-db:
+  db:
     image: postgres:16.1
-
-  ewm-service:
+    container_name: postgres
     ports:
-      - "8080:8080"
-
-  ewm-db:
-    image: postgres:16.1
+      - "6541:5432"
+    environment:
+      - POSTGRES_DB=statistic
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+    healthcheck:
+      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
+      timeout: 5s
+      interval: 5s
+      retries: 10
