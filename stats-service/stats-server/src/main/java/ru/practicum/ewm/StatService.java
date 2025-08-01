@@ -7,6 +7,5 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class StatService {
     public static void main(String[] args) {
         SpringApplication.run(StatService.class, args);
-        ;
     }
 }
