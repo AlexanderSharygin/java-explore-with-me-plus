@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>ru.practicum.ewm.stats</groupId>
-            <artifactId>stat-dto</artifactId>
+            <artifactId>stats-dto</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
