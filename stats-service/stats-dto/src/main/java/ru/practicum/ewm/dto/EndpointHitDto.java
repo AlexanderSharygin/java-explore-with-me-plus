@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 @AllArgsConstructor
-public class HitDto {
+public class EndpointHitDto {
     private String app;
     private String uri;
     private String ip;

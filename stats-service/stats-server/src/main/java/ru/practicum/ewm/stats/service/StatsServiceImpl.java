@@ -2,8 +2,8 @@ package ru.practicum.ewm.stats.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.dto.GetStatDto;
-import ru.practicum.ewm.dto.HitDto;
+import ru.practicum.ewm.dto.ViewStatsDto;
+import ru.practicum.ewm.dto.EndpointHitDto;
 import ru.practicum.ewm.dto.ParamDto;
 import ru.practicum.ewm.stats.mapper.HitMapper;
 import ru.practicum.ewm.stats.repository.StatsRepository;
@@ -16,13 +16,13 @@ public class StatsServiceImpl implements StatsService {
     private final StatsRepository statsRepository;
 
     @Override
-    public void hit(HitDto hitDto) {
-        statsRepository.save(HitMapper.toHit(hitDto));
+    public void hit(EndpointHitDto endpointHitDto) {
+        statsRepository.save(HitMapper.toHit(endpointHitDto));
     }
 
     @Override
-    public List<GetStatDto> getStats(ParamDto paramDto) {
-        List<GetStatDto> viewStatsList;
+    public List<ViewStatsDto> getStats(ParamDto paramDto) {
+        List<ViewStatsDto> viewStatsList;
         if (paramDto.getUnique()) {
             viewStatsList = statsRepository.findAllUniqueIpAndTimestampBetweenAndUriIn(
                     paramDto.getStart(),
