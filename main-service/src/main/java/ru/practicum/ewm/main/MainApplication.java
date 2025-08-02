@@ -7,11 +7,8 @@ import ru.practicum.ewm.client.StatsClient;
 
 
 @SpringBootApplication
-//@ComponentScan(value = {"ewm", "client"})
 public class MainApplication {
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = SpringApplication.run(MainApplication.class, args);
-        StatsClient statClient = context.getBean(StatsClient.class);
-        statClient.create(new EndpointHitDto());
+        SpringApplication.run(MainApplication.class);
     }
 }
