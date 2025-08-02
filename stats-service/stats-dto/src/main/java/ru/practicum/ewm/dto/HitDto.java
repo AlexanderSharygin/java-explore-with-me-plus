@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class HitDto {
-
+    private Long id;
     @NotBlank
     private String app;
     @NotBlank

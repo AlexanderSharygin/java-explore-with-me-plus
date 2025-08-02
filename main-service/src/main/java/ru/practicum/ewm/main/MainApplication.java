@@ -1,10 +1,9 @@
-package ewm;
+package ru.practicum.ewm.main;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import ru.practicum.ewm.client.StatsClient;
-import ru.practicum.ewm.dto.EndpointHitDto;
 
 
 @SpringBootApplication

@@ -1,15 +1,27 @@
 package ru.practicum.ewm.stats.mapper;
 
-import ru.practicum.ewm.dto.EndpointHitDto;
+import lombok.NoArgsConstructor;
+import ru.practicum.ewm.dto.HitDto;
 import ru.practicum.ewm.stats.model.Hit;
 
+@NoArgsConstructor
 public class HitMapper {
-    public static Hit toHit(EndpointHitDto endpointHitDto) {
-        return Hit.builder()
-                .app(endpointHitDto.getApp())
-                .ip(endpointHitDto.getIp())
-                .uri(endpointHitDto.getUri())
-                .timestamp(endpointHitDto.getTimestamp())
-                .build();
+    public static HitDto toHitDto(Hit hit) {
+        return new HitDto(
+                hit.getId(),
+                hit.getApp().getName(),
+                hit.getUri(),
+                hit.getIp(),
+                hit.getTimestamp()
+        );
+    }
+
+    public static Hit toHit(HitDto hitDto) {
+        return new Hit(hitDto.getId(),
+                hitDto.getIp(),
+                hitDto.getUri(),
+                hitDto.getTimestamp(),
+                null
+        );
     }
 }
