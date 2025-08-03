@@ -1,11 +1,10 @@
-package ru.practicum.ewm.handler;
+package ru.practicum.ewm.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -19,6 +18,6 @@ public class ApiError {
     public ApiError(HttpStatus status, String message, String apiError) {
         this.status = status;
         this.message = message;
-        error = Arrays.asList(apiError);
+        error = List.of(apiError);
     }
 }

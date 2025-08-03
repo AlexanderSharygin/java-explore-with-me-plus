@@ -6,18 +6,9 @@ import ru.practicum.ewm.stats.model.Hit;
 
 @NoArgsConstructor
 public class HitMapper {
-    public static HitDto toHitDto(Hit hit) {
-        return new HitDto(
-                hit.getId(),
-                hit.getApp().getName(),
-                hit.getUri(),
-                hit.getIp(),
-                hit.getTimestamp()
-        );
-    }
 
     public static Hit toHit(HitDto hitDto) {
-        return new Hit(hitDto.getId(),
+        return new Hit(-1L,
                 hitDto.getIp(),
                 hitDto.getUri(),
                 hitDto.getTimestamp(),

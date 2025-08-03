@@ -1,6 +1,7 @@
 package ru.practicum.ewm.stats.service;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.HitDto;
 import ru.practicum.ewm.dto.StatsDto;
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class StatsServiceImpl implements StatsService {
     private final HitRepository hitRepository;
     private final AppRepository appRepository;
@@ -35,7 +37,6 @@ public class StatsServiceImpl implements StatsService {
                 stats = hitRepository.findHitsByUris(startRange, endRange, uris);
             } else {
                 stats = hitRepository.findUniqueHitsByUris(startRange, endRange, uris);
-                stats.forEach(k -> k.setHits(1L));
             }
         }
 
@@ -44,16 +45,19 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public void hit(HitDto hitDto) {
-        hitDto.setTimestamp(LocalDateTime.now());
-        Optional<App> existedApp = appRepository.findByName(hitDto.getApp());
         Hit hit = HitMapper.toHit(hitDto);
+        hit.setTimestamp(LocalDateTime.now());
+        Optional<App> existedApp = appRepository.findByName(hitDto.getApp());
         if (existedApp.isPresent()) {
             hit.setApp(existedApp.get());
         } else {
             App app = new App();
             app.setName(hitDto.getApp());
             hit.setApp(appRepository.save(app));
+            log.info("В таблицу APP добавлено новое приложение - {}", app.getName());
         }
         hitRepository.save(hit);
+        log.info("В таблицу HIT добавлено обращение к {} с IP {} от источника {}", hit.getUri(), hit.getIp(),
+                hit.getApp().getName());
     }
 }
