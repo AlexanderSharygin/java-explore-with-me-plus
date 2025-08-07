@@ -28,8 +28,13 @@ public class UserAdminController {
         return userService.create(userDto);
     }
 
+    @GetMapping("/{id}")
+    public void getUser(@PathVariable("id") Integer id) {
+        userService.getById(id);
+    }
+
     @GetMapping
-    public List<UserDto> getUser(@RequestParam(value = "ids", required = false) List<Long> usersIds,
+    public List<UserDto> getUsers(@RequestParam(value = "ids", required = false) List<Long> usersIds,
                                  @PositiveOrZero @RequestParam(value = "from", defaultValue = "0") int from,
                                  @Positive @RequestParam(value = "size", defaultValue = "10") int size) {
         return userService.getAll(usersIds, PageRequest.of(from, size));
