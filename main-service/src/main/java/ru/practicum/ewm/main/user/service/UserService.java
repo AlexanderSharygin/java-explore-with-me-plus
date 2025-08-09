@@ -35,8 +35,7 @@ public class UserService {
     }
 
     public UserDto getById(long userId) {
-        return UserMapper.toUserDtoFromUser(userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User c id" + userId + " не существует!")));
+        return UserMapper.toUserDtoFromUser(getUserIfExist(userId));
     }
 
     public UserDto create(UserDto userDto) {
@@ -49,7 +48,11 @@ public class UserService {
     }
 
     public void delete(long userId) {
-        userRepository.delete(userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User c id" + userId + " не существует!")));
+        userRepository.delete(getUserIfExist(userId));
+    }
+
+    public User getUserIfExist(long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User c id" + userId + " не существует!"));
     }
 }
