@@ -7,6 +7,8 @@ import ru.practicum.ewm.main.category.dto.EventCategoryDto;
 import ru.practicum.ewm.main.category.dto.EventCategoryMapper;
 import ru.practicum.ewm.main.category.model.EventCategory;
 import ru.practicum.ewm.main.category.repository.EventCategoryRepository;
+import ru.practicum.ewm.main.event.model.Event;
+import ru.practicum.ewm.main.event.repository.EventRepository;
 import ru.practicum.ewm.main.exception.model.ConflictException;
 import ru.practicum.ewm.main.exception.model.NotFoundException;
 
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 public class EventCategoryService {
 
     private final EventCategoryRepository categoryRepository;
+    private final EventRepository eventRepository;
 
     public List<EventCategoryDto> getAll(Pageable pageable) {
         return categoryRepository.findAll(pageable).stream()
@@ -56,6 +59,10 @@ public class EventCategoryService {
 
     public void delete(long catId) {
         EventCategory category = getCategoryIfExist(catId);
+        List<Event> eventsList = eventRepository.findAllByCategory(category);
+        if (!eventsList.isEmpty()) {
+            throw new ConflictException("Can't be removed - category is not empty");
+        }
         categoryRepository.delete(category);
     }
 

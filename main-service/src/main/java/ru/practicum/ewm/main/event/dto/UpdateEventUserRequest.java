@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import ru.practicum.ewm.main.event.model.Location;
+import ru.practicum.ewm.main.event.model.UserEventActions;
 
 import java.time.LocalDateTime;
 
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class UpdateEventUserRequest extends UpdateEvent {
+public class UpdateEventUserRequest  {
 
     @Size(min = 20, max = 2000)
     private String annotation;

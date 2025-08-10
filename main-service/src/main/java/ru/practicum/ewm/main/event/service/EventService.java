@@ -97,7 +97,7 @@ public class EventService {
                 .orElse(new Location());
     }
 
-    private Event getEventIfExist(long eventId) {
+    public Event getEventIfExist(long eventId) {
         return eventRepository
                 .findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Событие с id " + eventId + " не существует!"));

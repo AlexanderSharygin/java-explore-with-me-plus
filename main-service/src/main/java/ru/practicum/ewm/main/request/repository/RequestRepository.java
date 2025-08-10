@@ -19,6 +19,8 @@ public interface RequestRepository extends JpaRepository<ParticipationRequest, L
 
     List<ParticipationRequest> findAllByEventAndRequester(Event event, User requester);
 
+    List<ParticipationRequest> findAllByEventAndStatus(Event event, RequestStatus status);
+
     @Query("SELECT p " +
             "FROM ParticipationRequest p " +
             "WHERE p.event IN :events AND p.status = :status")

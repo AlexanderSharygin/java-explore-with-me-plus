@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import ru.practicum.ewm.main.category.model.EventCategory;
 import ru.practicum.ewm.main.event.model.Event;
 import ru.practicum.ewm.main.event.model.EventState;
 import ru.practicum.ewm.main.request.model.RequestStatus;
@@ -18,6 +19,8 @@ import java.util.List;
 public interface EventRepository extends JpaRepository<Event, Long> {
 
     Page<Event> findAllByOwner(User owner, Pageable pageable);
+
+    List<Event> findAllByCategory(EventCategory category);
 
     @Query("SELECT e FROM Event e " +
             "WHERE e.owner.id IN :usersIds " +

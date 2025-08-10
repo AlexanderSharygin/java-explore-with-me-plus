@@ -1,5 +1,6 @@
 package ru.practicum.ewm.main.event.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -27,7 +28,8 @@ public class Event {
     private String annotation;
     @Size(min = 20, max = 7000)
     private String description;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
     @JoinColumn(name = "category_id")
     private EventCategory category;
     private Instant createdOn;

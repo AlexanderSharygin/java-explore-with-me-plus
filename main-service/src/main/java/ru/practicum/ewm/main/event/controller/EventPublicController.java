@@ -33,8 +33,8 @@ public class EventPublicController {
     }
 
     @GetMapping("/{id}")
-    public EventDto getEvents(@PathVariable Long id,
-                              HttpServletRequest request) {
+    public EventDto getEvent(@PathVariable Long id,
+                             HttpServletRequest request) {
         statClient.create(new HitDto(app, request.getRequestURI(), request.getRemoteAddr(), LocalDateTime.now()));
 
         return eventService.getById(id);
