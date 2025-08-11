@@ -1,6 +1,7 @@
 package ru.practicum.ewm.main.event.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class UpdateEventAdminDto  {
+    @NotBlank
     @Size(min = 20, max = 2000)
     private String annotation;
     private Long category;
@@ -28,6 +30,7 @@ public class UpdateEventAdminDto  {
     private Long participantLimit;
     private Boolean requestModeration;
     private AdminEventAction stateAction;
+    @NotBlank
     @Size(min = 3, max = 120)
     private String title;
 }

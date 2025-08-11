@@ -1,5 +1,6 @@
 package ru.practicum.ewm.main.event.controller;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class EventAdminController {
     }
 
     @PatchMapping("/{eventId}")
-    public EventDto updateEvent(@PathVariable Long eventId, @RequestBody UpdateEventAdminDto eventDto) {
+    public EventDto updateEvent(@PathVariable Long eventId, @RequestBody @Valid UpdateEventAdminDto eventDto) {
         return eventService.updateByAdmin(eventId, eventDto);
     }
 

@@ -36,10 +36,6 @@ public class EventCategoryService {
 
     public EventCategoryDto update(long catId, EventCategoryDto eventCategoryDto) {
         EventCategory categoryToUpdate = getCategoryIfExist(catId);
-        Optional<EventCategory> categoryWithSameName = categoryRepository.findByName(eventCategoryDto.getName());
-        if (categoryWithSameName.isPresent()) {
-            throw new ConflictException("Категория " + eventCategoryDto.getName() + " уже существует!");
-        }
         categoryToUpdate.setName(eventCategoryDto.getName());
         EventCategory updatedCategory = categoryRepository.save(categoryToUpdate);
 

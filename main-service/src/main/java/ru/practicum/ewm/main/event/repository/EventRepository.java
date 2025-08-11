@@ -25,11 +25,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query("SELECT e FROM Event e " +
             "WHERE e.owner.id IN :usersIds " +
             "AND e.state = :states " +
-            "AND e.category.id = :categoriesIds " +
+            "AND e.category.id in :categoriesIds " +
             "AND e.eventDateTime > :dateTime")
     Page<Event> findAllEventsAfterDateForUsersByStateAndCategories(List<Long> usersIds, List<EventState> states,
                                                                    List<Long> categoriesIds,
-                                                                   LocalDateTime dateTime,
+                                                                   Instant dateTime,
                                                                    Pageable pageable);
 
     @Query("SELECT e FROM Event e " +
@@ -57,7 +57,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             " e.owner, e.location, e.isPaid, e.participantLimit, e.publishedOn, e.isModerated," +
             " e.state, e.title " +
             "HAVING COUNT(r.status) < e.participantLimit ")
-    Page<Event> findAllAvailablePublishedEventsByCategoryAndStateAfterDate(String text, LocalDateTime startDateTime,
+    Page<Event> findAllAvailablePublishedEventsByCategoryAndStateAfterDate(String text, Instant startDateTime,
                                                                            List<Long> categoriesIds, Pageable pageable,
                                                                            EventState eventState,
                                                                            RequestStatus requestState,
@@ -78,8 +78,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             " e.owner, e.location, e.isPaid, e.participantLimit, e.publishedOn, e.isModerated," +
             " e.state, e.title " +
             "HAVING COUNT(r.status) < e.participantLimit ")
-    Page<Event> findAllAvailablePublishedEventsByCategoryAndStateBetweenDates(String text, LocalDateTime startDateTime,
-                                                                              LocalDateTime endDateTime,
+    Page<Event> findAllAvailablePublishedEventsByCategoryAndStateBetweenDates(String text, Instant startDateTime,
+                                                                              Instant endDateTime,
                                                                               List<Long> categoriesIds,
                                                                               Pageable pageable, EventState eventState,
                                                                               RequestStatus requestState, boolean isPaid);
@@ -92,7 +92,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "AND e.isPaid = :isPaid " +
             "AND e.eventDateTime >= :startDateTime " +
             "AND e.state = :state")
-    Page<Event> findAllEventsWithStatusAfterDate(String text, LocalDateTime startDateTime,
+    Page<Event> findAllEventsWithStatusAfterDate(String text, Instant startDateTime,
                                                  List<Long> categoriesIds, EventState state,
                                                  Pageable pageable, boolean isPaid);
 
@@ -104,7 +104,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "AND e.eventDateTime BETWEEN :startDateTime AND :endDateTime " +
             "AND e.isPaid = :isPaid " +
             "AND e.state = :state")
-    Page<Event> findAllEventsWithStatusBetweenDates(String text, LocalDateTime startDateTime, LocalDateTime endDateTime,
+    Page<Event> findAllEventsWithStatusBetweenDates(String text, Instant startDateTime, Instant endDateTime,
                                                     List<Long> categoriesIds, EventState state,
                                                     Pageable pageable, boolean isPaid);
 

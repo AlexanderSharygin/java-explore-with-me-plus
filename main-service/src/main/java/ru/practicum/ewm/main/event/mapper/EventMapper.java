@@ -43,9 +43,9 @@ public class EventMapper {
                 event.getDescription(),
                 LocalDateTime.ofInstant(event.getEventDateTime(), ZoneId.of("UTC")),
                 owner,
-                event.getLocation(), event.isPaid(), event.getParticipantLimit(),
+                event.getLocation(), event.getIsPaid(), event.getParticipantLimit(),
                 null,
-                event.isModerated(), event.getState(), event.getTitle(), views
+                event.getIsModerated(), event.getState(), event.getTitle(), views
         );
         if (event.getPublishedOn() != null) {
             eventDto.setPublishedOn(LocalDateTime.ofInstant(event.getPublishedOn(), ZoneId.of("UTC")));
@@ -57,6 +57,6 @@ public class EventMapper {
                                                          Long confirmedRequests, Integer views) {
         return new EventShortDto(event.getId(), event.getAnnotation(), eventCategoryDto, confirmedRequests,
                 LocalDateTime.ofInstant(event.getEventDateTime(), ZoneId.of("UTC")), owner,
-                event.isPaid(), event.getTitle(), views);
+                event.getIsPaid(), event.getTitle(), views);
     }
 }
