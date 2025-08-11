@@ -1,7 +1,5 @@
 package ru.practicum.ewm.main.compilation.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +15,5 @@ public class CompilationDto {
     private Set<EventShortDto> events;
     private Long id;
     private Boolean pinned;
-    @NotBlank
-    @Size(max = 50)
     private String title;
 }

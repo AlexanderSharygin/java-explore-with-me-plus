@@ -22,9 +22,9 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(min = 1, max = 120)
+    @Size(min = 1, max = 100)
     private String title;
-    @Size(min = 20, max = 2000)
+    @Size(min = 20, max = 500)
     private String annotation;
     @Size(min = 20, max = 7000)
     private String description;
@@ -40,10 +40,10 @@ public class Event {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")
     private Location location;
-    private Boolean isPaid;
-    private Long participantLimit;
+    private boolean isPaid;
+    private long participantLimit;
     private Instant publishedOn;
-    private Boolean isModerated;
+    private boolean isModerated;
     @Enumerated(EnumType.STRING)
     private EventState state;
 }

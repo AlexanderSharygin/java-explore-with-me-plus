@@ -15,7 +15,7 @@ public class CompilationMapper {
 
     public static CompilationDto toDtoFromCompilation(Compilation compilation, Set<EventShortDto> eventDto) {
 
-        return new CompilationDto(eventDto, compilation.getId(), compilation.getPinned(), compilation.getTitle());
+        return new CompilationDto(eventDto, compilation.getId(), compilation.isPinned(), compilation.getTitle());
     }
 
     public static Compilation toCompilationFromDto(CompilationRequestDto compilationDto, Set<Event> eventsList) {

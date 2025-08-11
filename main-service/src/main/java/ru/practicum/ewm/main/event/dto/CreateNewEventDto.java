@@ -17,10 +17,10 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class CreateNewEventDto {
     @NotBlank
-    @Size(min = 20, max = 2000)
+    @Size(min = 20, max = 500)
     private String annotation;
     @NotNull
-    private Long category;
+    private long category;
     @NotBlank
     @Size(min = 20, max = 7000)
     private String description;
@@ -30,9 +30,9 @@ public class CreateNewEventDto {
     private Location location;
     private Boolean paid;
     @PositiveOrZero
-    private Long participantLimit;
+    private long participantLimit;
     private Boolean requestModeration;
     @NotBlank
-    @Size(min = 3, max = 120)
+    @Size(min = 1, max = 100)
     private String title;
 }

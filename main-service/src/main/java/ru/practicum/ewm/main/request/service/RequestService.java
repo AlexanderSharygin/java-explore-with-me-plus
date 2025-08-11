@@ -76,7 +76,7 @@ public class RequestService {
             throw new ConflictException("Запрос не найден");
         }
         long confirmedRequestsCount = requestRepository.findAllByEventAndStatus(event, RequestStatus.CONFIRMED).size();
-        if (!event.getIsModerated() || event.getParticipantLimit() == 0) {
+        if (!event.isModerated() || event.getParticipantLimit() == 0) {
             requests.forEach(req -> req.setStatus(RequestStatus.CONFIRMED));
             result.getConfirmedRequests().addAll(requests.stream()
                     .map(RequestMapper::fromRequestTpRequestDto)
@@ -141,9 +141,9 @@ public class RequestService {
         }
 
         long confirmedRequestsCount = requestRepository.findAllByEventAndStatus(event, RequestStatus.CONFIRMED).size();
-        if (confirmedRequestsCount == event.getParticipantLimit() && event.getParticipantLimit()>0) {
+        if (confirmedRequestsCount == event.getParticipantLimit()) {
             throw new ConflictException(
-                    "Лимит участников для события " + event.getId() + " превышен");
+                    "The participant limit foe event with id " + event.getId() + " has been reached");
         }
         if (!requestRepository.findAllByEventAndRequester(event, user).isEmpty()) {
             throw new ConflictException("Запрос на участие в событии " + event.getId() +
@@ -151,7 +151,7 @@ public class RequestService {
         }
         ParticipationRequest request = new ParticipationRequest(null, LocalDateTime.now(), event, user,
                 RequestStatus.PENDING);
-        if (!event.getIsModerated()) {
+        if (!event.isModerated()) {
             request.setStatus(RequestStatus.CONFIRMED);
         }
         ParticipationRequest result = requestRepository.save(request);
