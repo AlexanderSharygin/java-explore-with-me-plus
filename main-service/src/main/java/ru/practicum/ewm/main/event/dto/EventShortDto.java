@@ -1,6 +1,8 @@
 package ru.practicum.ewm.main.event.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,8 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class EventShortDto {
     private long id;
+    @NotBlank
+    @Size(min = 20, max = 2000)
     private String annotation;
     private EventCategoryDto category;
     private long confirmedRequests;
@@ -22,6 +26,8 @@ public class EventShortDto {
     private LocalDateTime eventDate;
     private UserShortDto initiator;
     private Boolean paid;
+    @NotBlank
+    @Size(min = 3, max = 120)
     private String title;
     private Integer views;
 }

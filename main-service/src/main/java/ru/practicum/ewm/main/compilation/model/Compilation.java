@@ -27,6 +27,6 @@ public class Compilation {
             inverseJoinColumns = {@JoinColumn(name = "event_id")}
     )
     private Set<Event> events;
-    private boolean pinned;
+    private Boolean pinned;
     private String title;
 }

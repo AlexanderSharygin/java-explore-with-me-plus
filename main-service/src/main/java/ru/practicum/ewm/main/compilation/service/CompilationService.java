@@ -15,10 +15,8 @@ import ru.practicum.ewm.main.event.mapper.EventMapper;
 import ru.practicum.ewm.main.event.model.Event;
 import ru.practicum.ewm.main.event.repository.EventRepository;
 import ru.practicum.ewm.main.event.service.EventService;
-import ru.practicum.ewm.main.exception.model.BadRequestException;
 import ru.practicum.ewm.main.exception.model.NotFoundException;
 import ru.practicum.ewm.main.user.dto.UserMapper;
-
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -75,11 +73,10 @@ public class CompilationService {
     }
 
     public CompilationDto create(CompilationRequestDto compilationDto) {
-        if (compilationDto.getTitle() == null || compilationDto.getTitle().isBlank() ||
-                compilationDto.getTitle().length() > 128) {
-            throw new BadRequestException("Поле title не заполнено");
+        Set<Long> eventIds = new HashSet<>();
+        if (compilationDto.getEvents() != null) {
+            eventIds.addAll(compilationDto.getEvents());
         }
-        Set<Long> eventIds = compilationDto.getEvents();
         Set<Event> eventSet = new HashSet<>();
         Set<EventShortDto> items = new HashSet<>();
         if (!eventIds.isEmpty()) {
@@ -90,7 +87,11 @@ public class CompilationService {
                 throw new NotFoundException("Некоторые события не найдены");
             }
         }
+
         Compilation compilationToSave = CompilationMapper.toCompilationFromDto(compilationDto, eventSet);
+        if (compilationDto.getPinned() == null) {
+            compilationToSave.setPinned(false);
+        }
         Compilation compilation = compilationRepository.save(compilationToSave);
 
         return CompilationMapper.toDtoFromCompilation(compilation, items);

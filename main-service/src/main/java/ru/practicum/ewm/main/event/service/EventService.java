@@ -35,8 +35,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
-import static ru.practicum.ewm.main.event.model.UserEventActions.CANCEL_REVIEW;
-import static ru.practicum.ewm.main.event.model.UserEventActions.SEND_TO_REVIEW;
 
 @Service
 public class EventService {
@@ -70,8 +68,18 @@ public class EventService {
         if (event.getLocation().getLat() != null && event.getLocation().getLon() != null) {
             event.setLocation(saveLocation(event.getLocation()));
         } else {
-            event.setLocation(saveLocation(new Location(-1L, 0.0,0.0)));
+            event.setLocation(saveLocation(new Location(-1L, 0.0, 0.0)));
         }
+        if (event.getIsPaid() == null) {
+            event.setIsPaid(false);
+        }
+        if (event.getParticipantLimit() == null) {
+            event.setParticipantLimit(0L);
+        }
+        if (event.getIsModerated() == null) {
+            event.setIsModerated(true);
+        }
+
         Event result = eventRepository.save(event);
 
         return EventMapper.fromEventToEventDto(result, EventCategoryMapper.toCategoryDtoFromCategory(category),
@@ -81,7 +89,7 @@ public class EventService {
     private void checkEventStartDate(LocalDateTime startDateTime) {
         if (startDateTime != null &&
                 startDateTime.minusHours(1).minusMinutes(59).isBefore(now())) {
-            throw new ConflictException("Неверный eventStarDate: " + startDateTime + ". " +
+            throw new BadRequestException("Неверный eventStarDate: " + startDateTime + ". " +
                     "Событие должно начать хотя бы через 2 часа");
         }
     }
@@ -112,13 +120,13 @@ public class EventService {
             event.setLocation(location);
         }
         if (paid != null) {
-            event.setPaid(paid);
+            event.setIsPaid(paid);
         }
         if (participantLimit != null) {
             event.setParticipantLimit(participantLimit);
         }
         if (requestModeration != null) {
-            event.setModerated(requestModeration);
+            event.setIsModerated(requestModeration);
         }
     }
 
@@ -146,22 +154,25 @@ public class EventService {
         }
         updateEvent(event, updateEventDto.getEventDate(), updateEventDto.getLocation(), updateEventDto.getPaid(),
                 updateEventDto.getParticipantLimit(), updateEventDto.getRequestModeration());
-        switch (updateEventDto.getStateAction()) {
-            case PUBLISH_EVENT:
-                event.setState(EventState.PUBLISHED);
-                event.setPublishedOn(now().toInstant(ZoneOffset.UTC));
-                break;
-            case REJECT_EVENT:
-                event.setState(EventState.CANCELED);
-                break;
-            default:
-                throw new ConflictException("Wrong event state value");
+        if (updateEventDto.getStateAction() != null) {
+            switch (updateEventDto.getStateAction()) {
+                case PUBLISH_EVENT:
+                    event.setState(EventState.PUBLISHED);
+                    event.setPublishedOn(now().toInstant(ZoneOffset.UTC));
+                    break;
+                case REJECT_EVENT:
+                    event.setState(EventState.CANCELED);
+                    break;
+                default:
+                    throw new ConflictException("Wrong event state value");
+            }
         }
         if (updateEventDto.getTitle() != null) {
             event.setTitle(updateEventDto.getTitle());
         }
         Location location = event.getLocation();
-        event.setLocation(saveLocation(location));
+        Location savedLOcation = saveLocation(location);
+        event.setLocation(savedLOcation);
         Event updatedEvent = eventRepository.save(event);
 
         return getEventDtoFromEvent(updatedEvent);
@@ -186,13 +197,20 @@ public class EventService {
                 }
             }
         }
+        List<Long> categoriesIds = new ArrayList<>();
+        if (categories == null || categories.isEmpty()) {
+            categoriesIds = categoryRepository.findAll().stream().map(EventCategory::getId).toList();
+        } else {
+            categoriesIds = categories;
+        }
         Page<Event> events;
         if (rangeStart == null || rangeEnd == null) {
-            events = eventRepository.findAllEventsAfterDateForUsersByStateAndCategories(users, eventStates, categories,
-                    now(), pageable);
+            events = eventRepository.findAllEventsAfterDateForUsersByStateAndCategories(users, eventStates, categoriesIds,
+                    now().toInstant(ZoneOffset.UTC), pageable);
+
         } else {
             events = eventRepository.findAllEventsBetweenDatesForUsersByStateAndCategories(users, eventStates,
-                    categories, rangeStart.toInstant(ZoneOffset.UTC), rangeEnd.toInstant(ZoneOffset.UTC), pageable);
+                    categoriesIds, rangeStart.toInstant(ZoneOffset.UTC), rangeEnd.toInstant(ZoneOffset.UTC), pageable);
         }
 
         return getEventsFulls(events.stream().collect(Collectors.toList()));
@@ -308,7 +326,7 @@ public class EventService {
         } else {
             if (sort.equals("VIEWS") || sort.equals("EVENT_DATE") || sort.isBlank()) {
                 if (sort.equals("EVENT_DATE")) {
-                    paging = PageRequest.of((from) % size, size, Sort.by("startDateTime").descending());
+                    paging = PageRequest.of((from) % size, size, Sort.by("eventDateTime").descending());
                 } else {
                     paging = PageRequest.of(from, size);
                 }
@@ -319,17 +337,20 @@ public class EventService {
         if (onlyAvailable) {
             if (rangeStart == null || rangeEnd == null) {
                 events = eventRepository.findAllAvailablePublishedEventsByCategoryAndStateAfterDate(text,
-                        now(), categories, paging, EventState.PUBLISHED, RequestStatus.CONFIRMED, paid);
+                        now().toInstant(ZoneOffset.UTC), categories, paging, EventState.PUBLISHED,
+                        RequestStatus.CONFIRMED, paid);
             } else {
-                events = eventRepository.findAllAvailablePublishedEventsByCategoryAndStateBetweenDates(text, rangeStart,
-                        rangeEnd, categories, paging, EventState.PUBLISHED, RequestStatus.CONFIRMED, paid);
+                events = eventRepository.findAllAvailablePublishedEventsByCategoryAndStateBetweenDates(text,
+                        rangeStart.toInstant(ZoneOffset.UTC), rangeEnd.toInstant(ZoneOffset.UTC), categories, paging,
+                        EventState.PUBLISHED, RequestStatus.CONFIRMED, paid);
             }
         } else {
             if (rangeStart == null || rangeEnd == null) {
-                events = eventRepository.findAllEventsWithStatusAfterDate(text, now(), categories,
-                        EventState.PUBLISHED, paging, paid);
+                events = eventRepository.findAllEventsWithStatusAfterDate(text, now().toInstant(ZoneOffset.UTC),
+                        categories, EventState.PUBLISHED, paging, paid);
             } else {
-                events = eventRepository.findAllEventsWithStatusBetweenDates(text, rangeStart, rangeEnd, categories,
+                events = eventRepository.findAllEventsWithStatusBetweenDates(text,
+                        rangeStart.toInstant(ZoneOffset.UTC), rangeEnd.toInstant(ZoneOffset.UTC), categories,
                         EventState.PUBLISHED, paging, paid);
             }
         }
@@ -396,15 +417,17 @@ public class EventService {
         }
         updateEvent(event, eventDto.getEventDate(), eventDto.getLocation(), eventDto.getPaid(),
                 eventDto.getParticipantLimit(), eventDto.getRequestModeration());
-        switch (eventDto.getStateAction()) {
-            case CANCEL_REVIEW:
-                event.setState(EventState.CANCELED);
-                break;
-            case SEND_TO_REVIEW:
-                event.setState(EventState.PENDING);
-                break;
-            default:
-                throw new ConflictException("Unknown event state");
+        if (eventDto.getStateAction() != null) {
+            switch (eventDto.getStateAction()) {
+                case CANCEL_REVIEW:
+                    event.setState(EventState.CANCELED);
+                    break;
+                case SEND_TO_REVIEW:
+                    event.setState(EventState.PENDING);
+                    break;
+                default:
+                    throw new ConflictException("Unknown event state");
+            }
         }
         if (eventDto.getTitle() != null && !eventDto.getTitle().isBlank()) {
             event.setTitle(eventDto.getTitle());
