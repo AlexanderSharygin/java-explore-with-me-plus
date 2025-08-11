@@ -89,7 +89,7 @@ public class EventService {
     private void checkEventStartDate(LocalDateTime startDateTime) {
         if (startDateTime != null &&
                 startDateTime.minusHours(1).minusMinutes(59).isBefore(now())) {
-            throw new BadRequestException("Неверный eventStarDate: " + startDateTime + ". " +
+            throw new ConflictException("Неверный eventStarDate: " + startDateTime + ". " +
                     "Событие должно начать хотя бы через 2 часа");
         }
     }

@@ -17,7 +17,6 @@ public class CompilationDto {
     private Set<EventShortDto> events;
     private Long id;
     private Boolean pinned;
-    @NotBlank
     @Size(max = 50)
     private String title;
 }

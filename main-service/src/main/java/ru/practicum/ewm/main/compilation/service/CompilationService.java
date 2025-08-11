@@ -15,6 +15,7 @@ import ru.practicum.ewm.main.event.mapper.EventMapper;
 import ru.practicum.ewm.main.event.model.Event;
 import ru.practicum.ewm.main.event.repository.EventRepository;
 import ru.practicum.ewm.main.event.service.EventService;
+import ru.practicum.ewm.main.exception.model.BadRequestException;
 import ru.practicum.ewm.main.exception.model.NotFoundException;
 import ru.practicum.ewm.main.user.dto.UserMapper;
 
@@ -76,6 +77,9 @@ public class CompilationService {
         Set<Long> eventIds = new HashSet<>();
         if (compilationDto.getEvents() != null) {
             eventIds.addAll(compilationDto.getEvents());
+        }
+        if (compilationDto.getTitle() == null || compilationDto.getTitle().isEmpty() || compilationDto.getTitle().isBlank()) {
+            throw new BadRequestException("Title не может быть пустым");
         }
         Set<Event> eventSet = new HashSet<>();
         Set<EventShortDto> items = new HashSet<>();
