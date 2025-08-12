@@ -151,7 +151,10 @@ public class RequestService {
         }
         ParticipationRequest request = new ParticipationRequest(null, LocalDateTime.now(), event, user,
                 RequestStatus.PENDING);
-        if (!event.getIsModerated()) {
+        if (!event.getIsModerated() ) {
+            request.setStatus(RequestStatus.CONFIRMED);
+        }
+        if (event.getParticipantLimit() == 0) {
             request.setStatus(RequestStatus.CONFIRMED);
         }
         ParticipationRequest result = requestRepository.save(request);

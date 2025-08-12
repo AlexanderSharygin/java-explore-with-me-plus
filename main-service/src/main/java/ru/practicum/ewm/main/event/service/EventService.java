@@ -63,7 +63,12 @@ public class EventService {
         EventCategory category = categoryRepository.findById(eventDto.getCategory())
                 .orElseThrow(() -> new NotFoundException(
                         "Категория с id " + eventDto.getCategory() + "не существует!"));
-        checkEventStartDate(eventDto.getEventDate());
+        // checkEventStartDate(eventDto.getEventDate());
+        if (eventDto.getEventDate() != null &&
+                eventDto.getEventDate().isBefore(now())) {
+            throw new BadRequestException("Неверный eventStarDate: " + eventDto.getEventDate());
+        }
+
         Event event = EventMapper.fromCreateNewEventDtoToEvent(eventDto, owner, category);
         if (event.getLocation().getLat() != null && event.getLocation().getLon() != null) {
             event.setLocation(saveLocation(event.getLocation()));
@@ -138,7 +143,13 @@ public class EventService {
         if (event.getPublishedOn() != null && updateEventDto.getStateAction().equals(AdminEventAction.REJECT_EVENT)) {
             throw new ConflictException("Wrong status for the event. Only unpublished events can be rejected");
         }
-        checkEventStartDate(updateEventDto.getEventDate());
+        // checkEventStartDate(updateEventDto.getEventDate());
+
+        if (updateEventDto.getEventDate() != null &&
+                updateEventDto.getEventDate().isBefore(now())) {
+            throw new BadRequestException("Неверный eventStarDate: " + updateEventDto.getEventDate());
+        }
+
         if (updateEventDto.getCategory() != null) {
             EventCategory category = categoryRepository
                     .findById(updateEventDto.getCategory())
@@ -221,8 +232,11 @@ public class EventService {
         if (event.getPublishedOn() == null) {
             throw new NotFoundException("Событие с id" + eventId + " ещё не опубликовано");
         }
+        Integer views = getEventsViews(event.getId()) + 1;
+        EventDto eventDto = getEventDtoFromEvent(event);
+        eventDto.setViews(views);
 
-        return getEventDtoFromEvent(event);
+        return eventDto;
     }
 
 
@@ -400,7 +414,12 @@ public class EventService {
         if (!event.getState().equals(EventState.PENDING) && !event.getState().equals(EventState.CANCELED)) {
             throw new ConflictException("Можно изменить только события в статусе pending или canceled");
         }
-        checkEventStartDate(eventDto.getEventDate());
+        //  checkEventStartDate(eventDto.getEventDate());
+
+        if (eventDto.getEventDate() != null &&
+                eventDto.getEventDate().isBefore(now())) {
+            throw new BadRequestException("Неверный eventStarDate: " + eventDto.getEventDate());
+        }
         if (eventDto.getCategory() != null) {
             EventCategory category = categoryRepository
                     .findById(eventDto.getCategory())
