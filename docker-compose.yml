@@ -1,13 +1,11 @@
 services:
-  stats-server:
-    restart: on-failure
+  stat-service:
     build: ./stats-service/stats-server
-    image: ewm-stats-server
-    container_name: "ewm-stats-server"
+    container_name: stats-server
     ports:
       - "9090:9090"
     depends_on:
-      - stats-db
+      - statsdb
     environment:
       - DB_NAME=statistic
       - POSTGRES_USER=postgres
@@ -15,28 +13,24 @@ services:
       - DB_HOST=statsdb
       - DB_PORT=5432
 
-  stats-db:
+  statsdb:
     image: postgres:16.1
-    container_name: "stats-db"
+    container_name: statsdb
     ports:
-      - "6541:5432"
-    volumes:
-      - /var/lib/postgresql/stats
+      - "6540:5432"
     environment:
       - POSTGRES_DB=statistic
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
 
-  ewm-service:
-    restart: on-failure
+  main-service:
+    container_name: main-service
     build: ./main-service
-    image: ewm-main-service
-    container_name: "ewm-main-service"
     ports:
       - "8080:8080"
     depends_on:
-      - main-db
-      - stats-server
+      - stat-service
+      - ewmdb
     environment:
       - DB_NAME=ewm
       - POSTGRES_USER=admin
@@ -44,14 +38,13 @@ services:
       - DB_HOST=ewmdb
       - DB_PORT=5432
 
-  main-db:
+  ewmdb:
     image: postgres:16.1
-    container_name: "main-db"
+    container_name: ewmdb
     ports:
-      - "6542:5432"
-    volumes:
-      - /var/lib/postgresql/main-service
+      - "6541:5432"
     environment:
       - POSTGRES_DB=ewm
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
+
