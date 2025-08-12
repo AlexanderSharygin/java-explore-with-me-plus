@@ -1,12 +1,10 @@
 package ru.practicum.ewm.main.compilation.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import ru.practicum.ewm.main.event.dto.EventShortDto;
-
 
 import java.util.Set;
 
