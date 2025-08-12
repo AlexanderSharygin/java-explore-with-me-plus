@@ -15,13 +15,13 @@ services:
       - DB_PORT=5432
 
   statsdb:
-    image: postgres:13.7-alpine
+    image: postgres:16.1
     container_name: statsdb
     ports:
       - "6540:5432"
     environment:
       - POSTGRES_DB=statistic
-      - POSTGRES_USER=postgres
+      - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
 
   main-service:
@@ -34,17 +34,17 @@ services:
       - ewmdb
     environment:
       - DB_NAME=ewm
-      - POSTGRES_USER=postgres
+      - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
       - DB_HOST=ewmdb
       - DB_PORT=5432
 
   ewmdb:
-    image: postgres:13.7-alpine
+    image: postgres:16.1
     container_name: ewmdb
     ports:
       - "6541:5432"
     environment:
       - POSTGRES_DB=ewm
-      - POSTGRES_USER=postgres
+      - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin

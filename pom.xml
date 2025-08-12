@@ -27,13 +27,6 @@
 		<module>main-service</module>
 	</modules>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<scope>provided</scope>
-		</dependency>
-	</dependencies>
 	<build>
 		<pluginManagement>
 			<plugins>

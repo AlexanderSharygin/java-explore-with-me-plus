@@ -38,8 +38,8 @@
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
+            <version>1.18.38</version>
             <artifactId>lombok</artifactId>
-            <version>RELEASE</version>
         </dependency>
         <dependency>
             <groupId>ru.practicum.ewm.stats</groupId>
