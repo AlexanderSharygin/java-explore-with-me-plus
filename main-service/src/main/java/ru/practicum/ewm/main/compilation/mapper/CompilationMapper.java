@@ -7,6 +7,7 @@ import ru.practicum.ewm.main.compilation.model.Compilation;
 import ru.practicum.ewm.main.event.dto.EventShortDto;
 import ru.practicum.ewm.main.event.model.Event;
 
+
 import java.util.Set;
 
 @NoArgsConstructor
