@@ -8,9 +8,9 @@ services:
       - stats-db
     environment:
       - DB_NAME=statistic
-      - POSTGRES_USER=postgres
+      - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
-      - DB_HOST=statsdb
+      - DB_HOST=stats-db
       - DB_PORT=5432
 
   stats-db:
@@ -35,12 +35,12 @@ services:
       - DB_NAME=ewm
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
-      - DB_HOST=ewmdb
+      - DB_HOST=ewm-db
       - DB_PORT=5432
 
   ewm-db:
     image: postgres:16.1
-    container_name: ewmdb
+    container_name: ewm-db
     ports:
       - "6541:5432"
     environment:
