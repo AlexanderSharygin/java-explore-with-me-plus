@@ -7,6 +7,11 @@
           <package value="ru.practicum.ewm" />
         </packages>
       </persistence-unit>
+      <persistence-unit moduleName="main-service" name="Default">
+        <packages>
+          <package value="ru.practicum.ewm.main" />
+        </packages>
+      </persistence-unit>
     </persistence-units>
   </component>
 </project>

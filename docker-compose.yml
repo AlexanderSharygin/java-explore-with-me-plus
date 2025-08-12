@@ -1,18 +1,20 @@
 version: '3.8'
+
 services:
-  stat-service:
-    build: ./stats-service/stats-server
+  stats-service:
+    build: stats-service/stats-server
+    image: stats-server
     container_name: stats-server
     ports:
       - "9090:9090"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://statsdb:5432/statistic
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=admin
     depends_on:
       - statsdb
-    environment:
-      - DB_NAME=statistic
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=admin
-      - DB_HOST=statsdb
-      - DB_PORT=5432
+    networks:
+      - app-network
 
   statsdb:
     image: postgres:16.1
@@ -20,24 +22,37 @@ services:
     ports:
       - "6540:5432"
     environment:
-      - POSTGRES_DB=statistic
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin
+      POSTGRES_DB: statistic
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - stats_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d statistic"]
+      timeout: 5s
+      interval: 5s
+      retries: 10
+    networks:
+      - app-network
 
   main-service:
+    build: main-service
+    image: main-service
     container_name: main-service
-    build: ./main-service
     ports:
       - "8080:8080"
-    depends_on:
-      - stat-service
-      - ewmdb
     environment:
-      - DB_NAME=ewm
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin
-      - DB_HOST=ewmdb
-      - DB_PORT=5432
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewmdb:5432/ewm
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - SPRING_STAT_SERVICE_URL=http://stats-service:9090
+    depends_on:
+      ewmdb:
+        condition: service_healthy
+      stats-service:
+        condition: service_started
+    networks:
+      - app-network
 
   ewmdb:
     image: postgres:16.1
@@ -45,6 +60,23 @@ services:
     ports:
       - "6541:5432"
     environment:
-      - POSTGRES_DB=ewm
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin
+      POSTGRES_DB: ewm
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - ewm_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d ewm"]
+      timeout: 5s
+      interval: 5s
+      retries: 10
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  stats_data:
+  ewm_data:
