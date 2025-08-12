@@ -1,5 +1,5 @@
 services:
-  stat-service:
+  stats-server:
     build: ./stats-service/stats-server
     container_name: stats-server
     ports:
@@ -29,7 +29,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - stat-service
+      - stats-server
       - ewmdb
     environment:
       - DB_NAME=ewm
