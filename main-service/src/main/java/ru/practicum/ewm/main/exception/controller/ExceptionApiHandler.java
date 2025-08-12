@@ -4,11 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.method.MethodValidationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import ru.practicum.ewm.main.exception.model.BadRequestException;
 import ru.practicum.ewm.main.exception.model.ConflictException;
 import ru.practicum.ewm.main.exception.model.ErrorResponse;
@@ -63,6 +65,14 @@ public class ExceptionApiHandler {
         return new ErrorResponse(e.getMessage(), "Validation error", BAD_REQUEST.toString());
     }
 
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    @ResponseStatus(BAD_REQUEST)
+    public ErrorResponse handlerMethodValidationException(final Throwable e) {
+        log.warn(e.getMessage());
+
+        return new ErrorResponse(e.getMessage(), "Validation error", BAD_REQUEST.toString());
+    }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleOtherExceptions(final Throwable e) {
@@ -78,4 +88,7 @@ public class ExceptionApiHandler {
 
         return new ErrorResponse(e.getParameter(), "Bad request", HttpStatus.BAD_REQUEST.toString());
     }
+
+
+
 }

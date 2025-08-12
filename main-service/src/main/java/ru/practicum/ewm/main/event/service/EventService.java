@@ -329,7 +329,7 @@ public class EventService {
         return confirmedRequestsCountForEvents;
     }
 
-    public List<EventShortDto> getAllShort(String text, List<Long> categories, boolean paid,
+    public List<EventShortDto> getAllShort(String text, List<Long> categories, Boolean paid,
                                            LocalDateTime rangeStart,
                                            LocalDateTime rangeEnd, boolean onlyAvailable, String sort,
                                            int from, int size) {

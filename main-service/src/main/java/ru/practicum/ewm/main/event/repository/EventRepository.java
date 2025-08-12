@@ -23,9 +23,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAllByCategory(EventCategory category);
 
     @Query("SELECT e FROM Event e " +
-            "WHERE e.owner.id IN :usersIds " +
-            "AND e.state = :states " +
-            "AND e.category.id in :categoriesIds " +
+            "WHERE e.owner.id is not null or e.owner.id IN :usersIds " +
+            "AND e.state is not null or e.state = :states " +
+            "AND e.category.id is not null or e.category.id in :categoriesIds " +
             "AND e.eventDateTime > :dateTime")
     Page<Event> findAllEventsAfterDateForUsersByStateAndCategories(List<Long> usersIds, List<EventState> states,
                                                                    List<Long> categoriesIds,
@@ -89,12 +89,12 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "OR UPPER(e.description) LIKE UPPER(CONCAT('%', :text, '%')) " +
             "OR :text is null) " +
             "AND (e.category.id IN :categoriesIds)" +
-            "AND e.isPaid = :isPaid " +
+            "AND e.isPaid is not null or e.isPaid = :isPaid " +
             "AND e.eventDateTime >= :startDateTime " +
             "AND e.state = :state")
     Page<Event> findAllEventsWithStatusAfterDate(String text, Instant startDateTime,
                                                  List<Long> categoriesIds, EventState state,
-                                                 Pageable pageable, boolean isPaid);
+                                                 Pageable pageable, Boolean isPaid);
 
     @Query(" SELECT e FROM Event e " +
             "WHERE (UPPER(e.annotation) LIKE UPPER(CONCAT('%', :text, '%')) " +
@@ -102,7 +102,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "OR :text is null) " +
             "AND (e.category.id IN :categoriesIds)" +
             "AND e.eventDateTime BETWEEN :startDateTime AND :endDateTime " +
-            "AND e.isPaid = :isPaid " +
+            "AND e.isPaid is not null or e.isPaid = :isPaid " +
             "AND e.state = :state")
     Page<Event> findAllEventsWithStatusBetweenDates(String text, Instant startDateTime, Instant endDateTime,
                                                     List<Long> categoriesIds, EventState state,

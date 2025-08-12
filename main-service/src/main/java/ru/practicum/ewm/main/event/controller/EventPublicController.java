@@ -3,16 +3,15 @@ package ru.practicum.ewm.main.event.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
-
 import ru.practicum.ewm.client.StatsClient;
 import ru.practicum.ewm.dto.HitDto;
 import ru.practicum.ewm.main.event.dto.EventDto;
 import ru.practicum.ewm.main.event.dto.EventShortDto;
 import ru.practicum.ewm.main.event.service.EventService;
-
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,9 +40,9 @@ public class EventPublicController {
     }
 
     @GetMapping
-    public List<EventShortDto> getAllEvents(@RequestParam(value = "text", required = false) String text,
+    public List<EventShortDto> getAllEvents(@RequestParam(value = "text", required = false) @Size(min = 3) String text,
                                             @RequestParam(value = "categories", required = false) List<Long> categories,
-                                            @RequestParam(value = "paid", defaultValue = "false") boolean paid,
+                                            @RequestParam(value = "paid", required = false) Boolean paid,
                                             @RequestParam(value = "rangeStart", required = false)
                                             @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
                                             @RequestParam(value = "rangeEnd", required = false)
