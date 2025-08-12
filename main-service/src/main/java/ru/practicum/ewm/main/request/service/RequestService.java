@@ -7,17 +7,16 @@ import ru.practicum.ewm.main.event.repository.EventRepository;
 import ru.practicum.ewm.main.event.service.EventService;
 import ru.practicum.ewm.main.exception.model.ConflictException;
 import ru.practicum.ewm.main.exception.model.NotFoundException;
-import ru.practicum.ewm.main.request.dto.RequestStatusUpdateRequest;
-import ru.practicum.ewm.main.request.dto.RequestStatusUpdateResponse;
 import ru.practicum.ewm.main.request.dto.RequestDto;
 import ru.practicum.ewm.main.request.dto.RequestMapper;
+import ru.practicum.ewm.main.request.dto.RequestStatusUpdateRequest;
+import ru.practicum.ewm.main.request.dto.RequestStatusUpdateResponse;
 import ru.practicum.ewm.main.request.model.ParticipationRequest;
 import ru.practicum.ewm.main.request.model.RequestStatus;
 import ru.practicum.ewm.main.request.repository.RequestRepository;
 import ru.practicum.ewm.main.user.model.User;
 import ru.practicum.ewm.main.user.repository.UserRepository;
 import ru.practicum.ewm.main.user.service.UserService;
-
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -141,7 +140,7 @@ public class RequestService {
         }
 
         long confirmedRequestsCount = requestRepository.findAllByEventAndStatus(event, RequestStatus.CONFIRMED).size();
-        if (confirmedRequestsCount == event.getParticipantLimit() && event.getParticipantLimit()>0) {
+        if (confirmedRequestsCount == event.getParticipantLimit() && event.getParticipantLimit() > 0) {
             throw new ConflictException(
                     "Лимит участников для события " + event.getId() + " превышен");
         }
@@ -151,7 +150,7 @@ public class RequestService {
         }
         ParticipationRequest request = new ParticipationRequest(null, LocalDateTime.now(), event, user,
                 RequestStatus.PENDING);
-        if (!event.getIsModerated() ) {
+        if (!event.getIsModerated()) {
             request.setStatus(RequestStatus.CONFIRMED);
         }
         if (event.getParticipantLimit() == 0) {

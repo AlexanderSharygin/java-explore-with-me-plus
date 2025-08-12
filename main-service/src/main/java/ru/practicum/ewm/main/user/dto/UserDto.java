@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class UserDto {
     @NotEmpty
     @Email
-    @Size(min=6, max = 254)
+    @Size(min = 6, max = 254)
     private String email;
     private long id;
     @NotBlank

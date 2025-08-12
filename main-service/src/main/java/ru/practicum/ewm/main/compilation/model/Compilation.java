@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.practicum.ewm.main.event.model.Event;
 
-
 import java.util.Set;
 
 @Entity
