@@ -1,7 +1,7 @@
 services:
   stats-server:
     restart: on-failure
-    build: stats-service/stats-server
+    build: ./stats-service/stats-server
     image: ewm-stats-server
     container_name: "ewm-stats-server"
     ports:
@@ -29,7 +29,7 @@ services:
 
   ewm-service:
     restart: on-failure
-    build: main-service
+    build: ./main-service
     image: ewm-main-service
     container_name: "ewm-main-service"
     ports:
