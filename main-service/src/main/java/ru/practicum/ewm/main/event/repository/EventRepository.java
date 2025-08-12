@@ -12,7 +12,6 @@ import ru.practicum.ewm.main.request.model.RequestStatus;
 import ru.practicum.ewm.main.user.model.User;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @NotNull
@@ -107,7 +106,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     Page<Event> findAllEventsWithStatusBetweenDates(String text, Instant startDateTime, Instant endDateTime,
                                                     List<Long> categoriesIds, EventState state,
                                                     Pageable pageable, boolean isPaid);
-
 
 
 }
