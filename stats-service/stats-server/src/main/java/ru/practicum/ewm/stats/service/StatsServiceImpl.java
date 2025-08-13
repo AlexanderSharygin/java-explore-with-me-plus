@@ -26,9 +26,9 @@ public class StatsServiceImpl implements StatsService {
     @Override
     public List<StatsDto> getStats(LocalDateTime startRange, LocalDateTime endRange, List<String> uris, boolean unique) {
 
-        if(startRange==null || endRange==null || startRange.isAfter(endRange) || startRange.equals(endRange)) {
-           throw new BadRequestException("Wrong start or end date");
-       }
+        if (startRange == null || endRange == null || startRange.isAfter(endRange) || startRange.equals(endRange)) {
+            throw new BadRequestException("Wrong start or end date");
+        }
         List<StatsDto> stats;
         if (uris == null || uris.isEmpty()) {
             if (!unique) {
