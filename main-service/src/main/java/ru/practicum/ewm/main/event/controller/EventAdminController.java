@@ -20,7 +20,6 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/admin/events")
 public class EventAdminController {
-    private final String app = "ewm-main";
     private final StatsClient statClient;
     private final EventService eventService;
 
@@ -42,14 +41,13 @@ public class EventAdminController {
                                  @PositiveOrZero @RequestParam(value = "from", defaultValue = "0") int from,
                                  @Positive @RequestParam(value = "size", defaultValue = "10") int size,
                                  HttpServletRequest request) {
-        statClient.create(new HitDto(request.getRemoteAddr(), app, "/events", LocalDateTime.now()));
+        statClient.create(new HitDto(request.getRemoteAddr(), "ewm-main", "/events", LocalDateTime.now()));
 
         return eventService.getAll(users, states, categories, rangeStart, rangeEnd, PageRequest.of(from, size));
     }
 
     @PatchMapping("/{eventId}")
-    public EventDto updateEvent(@PathVariable Long eventId, @RequestBody @Valid UpdateEventAdminDto eventDto,
-                                HttpServletRequest request) {
+    public EventDto updateEvent(@PathVariable Long eventId, @RequestBody @Valid UpdateEventAdminDto eventDto) {
 
         return eventService.updateByAdmin(eventId, eventDto);
     }

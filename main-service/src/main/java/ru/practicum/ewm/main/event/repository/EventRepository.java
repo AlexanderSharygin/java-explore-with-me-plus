@@ -81,7 +81,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                                                                               Instant endDateTime,
                                                                               List<Long> categoriesIds,
                                                                               Pageable pageable, EventState eventState,
-                                                                              RequestStatus requestState, boolean isPaid);
+                                                                              RequestStatus requestState,
+                                                                              boolean isPaid);
 
     @Query(" SELECT e FROM Event e " +
             "WHERE (UPPER(e.annotation) LIKE UPPER(CONCAT('%', :text, '%')) " +

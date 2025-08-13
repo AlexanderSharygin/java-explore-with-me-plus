@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class EventShortDto {
+
     private long id;
     @NotBlank
     @Size(min = 20, max = 2000)

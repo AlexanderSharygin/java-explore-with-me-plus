@@ -30,17 +30,14 @@ public class EventPrivateController {
 
     private final EventService eventService;
     private final RequestService requestService;
-    private final String app = "ewm-main";
     private final StatsClient statClient;
 
     @Autowired
     public EventPrivateController(EventService eventService, RequestService requestService, StatsClient statClient) {
         this.eventService = eventService;
-
         this.requestService = requestService;
         this.statClient = statClient;
     }
-
 
     @GetMapping("/{userId}/events")
     public List<EventShortDto> getUserEvents(@PathVariable Long userId,
@@ -48,10 +45,10 @@ public class EventPrivateController {
                                              @Positive @RequestParam(value = "size", defaultValue = "10") int size,
                                              HttpServletRequest request) {
         Pageable paging = PageRequest.of(from, size);
-        statClient.create(new HitDto(request.getRemoteAddr(), app, "/events", LocalDateTime.now()));
+        statClient.create(new HitDto(request.getRemoteAddr(), "ewm-main", "/events", LocalDateTime.now()));
+
         return eventService.getByUserId(userId, paging);
     }
-
 
     @PostMapping("/{userId}/events")
     @ResponseStatus(HttpStatus.CREATED)
@@ -62,14 +59,17 @@ public class EventPrivateController {
 
     @GetMapping("/{userId}/events/{eventId}")
     public EventDto getUserEvents(@PathVariable Long userId, @PathVariable Long eventId, HttpServletRequest request) {
-        statClient.create(new HitDto(request.getRemoteAddr(), app, "/events", LocalDateTime.now()));
+        statClient.create(new HitDto(request.getRemoteAddr(), "ewm-main", "/events", LocalDateTime.now()));
+
         return eventService.getEventByUserId(userId, eventId);
     }
 
     @PatchMapping("/{userId}/events/{eventId}")
     public EventDto updateEvent(@RequestBody @Valid UpdateEventUserRequest eventDto,
                                 @PathVariable Long userId, @PathVariable Long eventId, HttpServletRequest request) {
-        statClient.create(new HitDto(request.getRemoteAddr(), app, "/events/" + eventId, LocalDateTime.now()));
+        statClient.create(new HitDto(request.getRemoteAddr(), "ewm-main", "/events/" + eventId,
+                LocalDateTime.now()));
+
         return eventService.updateByUser(eventDto, userId, eventId);
     }
 

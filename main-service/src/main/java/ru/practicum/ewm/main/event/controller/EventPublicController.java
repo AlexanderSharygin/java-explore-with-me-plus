@@ -19,11 +19,10 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/events")
 public class EventPublicController {
-    private final EventService eventService;
 
+    private final EventService eventService;
     private final StatsClient statClient;
 
-    private final String app = "ewm-main";
 
     @Autowired
     public EventPublicController(EventService eventService, StatsClient statClient) {
@@ -34,7 +33,8 @@ public class EventPublicController {
     @GetMapping("/{id}")
     public EventDto getEvent(@PathVariable Long id,
                              HttpServletRequest request) {
-        statClient.create(new HitDto(request.getRemoteAddr(), app, request.getRequestURI(), LocalDateTime.now()));
+        statClient.create(new HitDto(request.getRemoteAddr(), "ewm-main", request.getRequestURI(),
+                LocalDateTime.now()));
 
         return eventService.getById(id);
     }
@@ -47,12 +47,14 @@ public class EventPublicController {
                                             @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
                                             @RequestParam(value = "rangeEnd", required = false)
                                             @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
-                                            @RequestParam(value = "onlyAvailable", defaultValue = "false") boolean onlyAvailable,
+                                            @RequestParam(value = "onlyAvailable", defaultValue = "false")
+                                            boolean onlyAvailable,
                                             @RequestParam(value = "sort", required = false) String sort,
                                             @PositiveOrZero @RequestParam(value = "from", defaultValue = "0") int from,
                                             @Positive @RequestParam(value = "size", defaultValue = "10") int size,
                                             HttpServletRequest request) {
-        statClient.create(new HitDto(request.getRemoteAddr(), app, request.getRequestURI(), LocalDateTime.now()));
+        statClient.create(new HitDto(request.getRemoteAddr(), "ewm-main", request.getRequestURI(),
+                LocalDateTime.now()));
 
         return eventService.getAllShort(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
     }
