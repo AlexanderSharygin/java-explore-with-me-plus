@@ -61,15 +61,15 @@ public class EventPrivateController {
     }
 
     @GetMapping("/{userId}/events/{eventId}")
-    public EventDto getUserEvents(@PathVariable Long userId, @PathVariable Long eventId,  HttpServletRequest request) {
+    public EventDto getUserEvents(@PathVariable Long userId, @PathVariable Long eventId, HttpServletRequest request) {
         statClient.create(new HitDto(request.getRemoteAddr(), app, "/events", LocalDateTime.now()));
         return eventService.getEventByUserId(userId, eventId);
     }
 
     @PatchMapping("/{userId}/events/{eventId}")
     public EventDto updateEvent(@RequestBody @Valid UpdateEventUserRequest eventDto,
-                                @PathVariable Long userId, @PathVariable Long eventId,  HttpServletRequest request) {
-        statClient.create(new HitDto(request.getRemoteAddr(), app, "/events/"+eventId, LocalDateTime.now()));
+                                @PathVariable Long userId, @PathVariable Long eventId, HttpServletRequest request) {
+        statClient.create(new HitDto(request.getRemoteAddr(), app, "/events/" + eventId, LocalDateTime.now()));
         return eventService.updateByUser(eventDto, userId, eventId);
     }
 
