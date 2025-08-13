@@ -22,9 +22,12 @@ public class CompilationPublicController {
     }
 
     @GetMapping
-    public List<CompilationDto> getAllCompilations(@RequestParam(value = "pinned", defaultValue = "false") boolean pinned,
-                                                   @PositiveOrZero @RequestParam(value = "from", defaultValue = "0") int from,
-                                                   @Positive @RequestParam(value = "size", defaultValue = "10") int size) {
+    public List<CompilationDto> getAllCompilations(@RequestParam(value = "pinned", defaultValue = "false")
+                                                   boolean pinned,
+                                                   @PositiveOrZero @RequestParam(value = "from", defaultValue = "0")
+                                                   int from,
+                                                   @Positive @RequestParam(value = "size", defaultValue = "10")
+                                                   int size) {
         return compilationService.getAll(pinned, PageRequest.of(from, size));
     }
 
@@ -32,5 +35,4 @@ public class CompilationPublicController {
     public CompilationDto getCompilation(@PathVariable long compId) {
         return compilationService.getById(compId);
     }
-
 }

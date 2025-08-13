@@ -16,6 +16,7 @@ import ru.practicum.ewm.main.exception.model.NotFoundException;
 
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @RestControllerAdvice
@@ -23,23 +24,21 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 public class ExceptionApiHandler {
 
     @ExceptionHandler(ConflictException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseStatus(CONFLICT)
     public ErrorResponse entityIsAlreadyExist(ConflictException exception) {
         log.warn("Entity is already exist", exception.getMessage(), exception.getStackTrace());
-
-        return new ErrorResponse(exception.getMessage(), "Entity is already exist!", HttpStatus.CONFLICT.toString());
+        return new ErrorResponse(exception.getMessage(), "Entity is already exist!", CONFLICT.toString());
     }
 
     @ExceptionHandler(NotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(NOT_FOUND)
     public ErrorResponse entityIsNotExist(NotFoundException exception) {
         log.warn("Entity is not found", exception.getMessage(), exception.getStackTrace());
-
-        return new ErrorResponse(exception.getMessage(), "Entity is not found!", HttpStatus.NOT_FOUND.toString());
+        return new ErrorResponse(exception.getMessage(), "Entity is not found!", NOT_FOUND.toString());
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(BAD_REQUEST)
     public ErrorResponse commonValidation(MethodArgumentNotValidException e) {
         List<FieldError> items = e.getBindingResult().getFieldErrors();
         String message = items.stream()
@@ -52,40 +51,35 @@ public class ExceptionApiHandler {
         message = message + " - " + title;
         log.warn(message);
 
-        return new ErrorResponse(message, "Validation error", HttpStatus.BAD_REQUEST.toString());
+        return new ErrorResponse(message, "Validation error", BAD_REQUEST.toString());
     }
 
     @ExceptionHandler({MissingServletRequestParameterException.class})
     @ResponseStatus(BAD_REQUEST)
     public ErrorResponse handleMissingServletRequestParameterException(final Throwable e) {
-        log.warn("MissingServletRequestParameterException. Message: {}, StackTrace: {}", e.getMessage(), e.getStackTrace());
-
+        log.warn("MissingServletRequestParameterException. Message: {}, StackTrace: {}", e.getMessage(),
+                e.getStackTrace());
         return new ErrorResponse(e.getMessage(), "Validation error", BAD_REQUEST.toString());
     }
 
     @ExceptionHandler(HandlerMethodValidationException.class)
     @ResponseStatus(BAD_REQUEST)
     public ErrorResponse handlerMethodValidationException(final Throwable e) {
-        log.warn(e.getMessage());
-
+        log.warn("HandlerMethodValidationException. Message: {}, StackTrace: {}", e.getMessage(), e.getStackTrace());
         return new ErrorResponse(e.getMessage(), "Validation error", BAD_REQUEST.toString());
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(INTERNAL_SERVER_ERROR)
     public ErrorResponse handleOtherExceptions(final Throwable e) {
-        log.warn("Unknown error. Message: {}, StackTrace: {}", e.getMessage(), e.getStackTrace());
-
-        return new ErrorResponse(e.getMessage(), "Unknown error", HttpStatus.INTERNAL_SERVER_ERROR.toString());
+        log.warn("Exception. Message: {}, StackTrace: {}", e.getMessage(), e.getStackTrace());
+        return new ErrorResponse(e.getMessage(), "Unknown error", INTERNAL_SERVER_ERROR.toString());
     }
 
     @ExceptionHandler(BadRequestException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(BAD_REQUEST)
     public ErrorResponse handleIncorrectParameterException(final BadRequestException e) {
-        log.warn(e.getMessage());
-
-        return new ErrorResponse(e.getParameter(), "Bad request", HttpStatus.BAD_REQUEST.toString());
+        log.warn("BadRequestException. Message: {}, StackTrace: {}", e.getMessage(), e.getStackTrace());
+        return new ErrorResponse(e.getParameter(), "Bad request", BAD_REQUEST.toString());
     }
-
-
 }

@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/admin/users")
 public class UserAdminController {
+
     private final UserService userService;
 
     @Autowired
@@ -29,8 +30,8 @@ public class UserAdminController {
     }
 
     @GetMapping("/{id}")
-    public void getUser(@PathVariable("id") Integer id) {
-        userService.getById(id);
+    public UserDto getUser(@PathVariable("id") Integer id) {
+        return userService.getById(id);
     }
 
     @GetMapping

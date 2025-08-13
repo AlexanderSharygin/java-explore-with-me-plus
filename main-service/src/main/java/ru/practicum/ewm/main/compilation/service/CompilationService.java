@@ -137,9 +137,8 @@ public class CompilationService {
         for (Long eventId : eventsIds) {
             uris.add("/events/" + eventId);
         }
-        List<HashMap<Object, Object>> stats = (List<HashMap<Object, Object>>) statClient.getStats("2000-01-01 00:00:00",
-                LocalDateTime.now().format(formatter),
-                uris, false).getBody();
+        List<HashMap<Object, Object>> stats = (List<HashMap<Object, Object>>) statClient.getStats(
+                "2000-01-01 00:00:00", LocalDateTime.now().format(formatter), uris, false).getBody();
         Map<Long, Integer> eventViewsMap = new HashMap<>();
         if (stats != null && !stats.isEmpty()) {
             stats.forEach(map -> {
@@ -159,9 +158,7 @@ public class CompilationService {
     }
 
     private Set<EventShortDto> getEventsShorts(Set<Event> events) {
-        List<Long> eventIds = events.stream()
-                .map(Event::getId)
-                .collect(Collectors.toList());
+        List<Long> eventIds = events.stream().map(Event::getId).toList();
         Map<Long, Long> confirmedRequestsCountForEvents = eventService
                 .getConfirmedRequestsCountForEvents(new ArrayList<>(events));
         Map<Long, Integer> viewsMap = getEventsViewsMap(new ArrayList<>(eventIds));
@@ -171,7 +168,6 @@ public class CompilationService {
                         EventCategoryMapper.toCategoryDtoFromCategory(event.getCategory()),
                         UserMapper.fromUserToUserShortDto(event.getOwner()),
                         confirmedRequestsCountForEvents.getOrDefault(event.getId(), 0L),
-                        viewsMap.get(event.getId())))
-                .collect(Collectors.toSet());
+                        viewsMap.get(event.getId()))).collect(Collectors.toSet());
     }
 }

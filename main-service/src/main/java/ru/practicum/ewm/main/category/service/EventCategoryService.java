@@ -49,8 +49,7 @@ public class EventCategoryService {
     public EventCategoryDto create(EventCategoryDto eventCategoryDto) {
         Optional<EventCategory> categoryWithSameName = categoryRepository.findByName(eventCategoryDto.getName());
         if (categoryWithSameName.isPresent()) {
-            throw new ConflictException("Category with name " + eventCategoryDto.getName() +
-                    " already exists in the DB");
+            throw new ConflictException("Категория " + eventCategoryDto.getName() + " уже существует!");
         }
 
         EventCategory category = categoryRepository.save(EventCategoryMapper.toCategoryFromCategoryDto(eventCategoryDto));
@@ -61,7 +60,7 @@ public class EventCategoryService {
         EventCategory category = getCategoryIfExist(catId);
         List<Event> eventsList = eventRepository.findAllByCategory(category);
         if (!eventsList.isEmpty()) {
-            throw new ConflictException("Can't be removed - category is not empty");
+            throw new ConflictException("У категории есть события. Удаление невозможно!");
         }
         categoryRepository.delete(category);
     }
