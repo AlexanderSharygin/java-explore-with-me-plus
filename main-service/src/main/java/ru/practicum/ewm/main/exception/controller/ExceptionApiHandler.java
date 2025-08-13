@@ -1,7 +1,6 @@
 package ru.practicum.ewm.main.exception.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -17,7 +16,6 @@ import ru.practicum.ewm.main.exception.model.NotFoundException;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @RestControllerAdvice
 @Slf4j
