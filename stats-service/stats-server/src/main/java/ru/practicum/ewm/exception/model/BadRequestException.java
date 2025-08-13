@@ -1,4 +1,4 @@
-package ru.practicum.ewm.exception;
+package ru.practicum.ewm.exception.model;
 
 public class BadRequestException extends RuntimeException {
     private final String parameter;

@@ -27,7 +27,8 @@ public class StatsClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> getStats(String startDateTime, String endDateTime, List<String> uris, boolean unique) {
+    public ResponseEntity<Object> getStats(String startDateTime, String endDateTime, List<String> uris,
+                                           boolean unique) {
         Map<String, Object> parameters = Map.of(
                 "start", startDateTime,
                 "end", endDateTime,
