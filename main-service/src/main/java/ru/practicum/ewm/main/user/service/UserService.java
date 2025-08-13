@@ -12,7 +12,6 @@ import ru.practicum.ewm.main.user.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -27,10 +26,10 @@ public class UserService {
     public List<UserDto> getAll(List<Long> usersId, Pageable pageable) {
         if (usersId == null) {
             return userRepository.findAll(pageable).stream()
-                    .map(UserMapper::toUserDtoFromUser).collect(Collectors.toList());
+                    .map(UserMapper::toUserDtoFromUser).toList();
         } else {
             return userRepository.findAllByIdIn(usersId, pageable).stream()
-                    .map(UserMapper::toUserDtoFromUser).collect(Collectors.toList());
+                    .map(UserMapper::toUserDtoFromUser).toList();
         }
     }
 

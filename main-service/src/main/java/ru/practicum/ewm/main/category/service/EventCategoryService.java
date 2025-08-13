@@ -14,7 +14,6 @@ import ru.practicum.ewm.main.exception.model.NotFoundException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,8 +24,7 @@ public class EventCategoryService {
 
     public List<EventCategoryDto> getAll(Pageable pageable) {
         return categoryRepository.findAll(pageable).stream()
-                .map(EventCategoryMapper::toCategoryDtoFromCategory)
-                .collect(Collectors.toList());
+                .map(EventCategoryMapper::toCategoryDtoFromCategory).toList();
     }
 
     public EventCategoryDto getById(long catId) {
