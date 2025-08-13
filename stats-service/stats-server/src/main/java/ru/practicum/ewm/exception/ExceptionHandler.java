@@ -16,4 +16,12 @@ public class ExceptionHandler {
         log.error(Arrays.toString(ex.getStackTrace()));
         return new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getLocalizedMessage(), "Something went wrong");
     }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleIncorrectParameterException(final BadRequestException e) {
+        log.warn(e.getMessage());
+
+        return new ErrorResponse(e.getParameter(), "Bad request", HttpStatus.BAD_REQUEST.toString());
+    }
 }
