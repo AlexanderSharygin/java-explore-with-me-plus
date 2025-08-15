@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
-import ru.practicum.ewm.main.exception.model.BadRequestException;
-import ru.practicum.ewm.main.exception.model.ConflictException;
-import ru.practicum.ewm.main.exception.model.ErrorResponse;
-import ru.practicum.ewm.main.exception.model.NotFoundException;
+import ru.practicum.ewm.main.exception.model.*;
 
 import java.util.List;
 
@@ -20,6 +17,13 @@ import static org.springframework.http.HttpStatus.*;
 @RestControllerAdvice
 @Slf4j
 public class ExceptionApiHandler {
+
+    @ExceptionHandler(ForbiddenException.class)
+    @ResponseStatus(FORBIDDEN)
+    public ErrorResponse handleForbidden(final ForbiddenException e) {
+        log.warn("ForbiddenException: {}", e.getMessage(), e);
+        return new ErrorResponse(e.getMessage(), "Forbidden", FORBIDDEN.toString());
+    }
 
     @ExceptionHandler(ConflictException.class)
     @ResponseStatus(CONFLICT)
