@@ -18,7 +18,7 @@ public class StatsClient extends BaseClient {
     private static final String API_PREFIX = "";
 
     @Autowired
-    public StatsClient(@Value("${stats-server.url}") String serverUrl, RestTemplateBuilder builder) {
+    public StatsClient(@Value("http://stats-server:9090") String serverUrl, RestTemplateBuilder builder) {
         super(
                 builder
                         .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))
@@ -27,7 +27,8 @@ public class StatsClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> getStats(String startDateTime, String endDateTime, List<String> uris, boolean unique) {
+    public ResponseEntity<Object> getStats(String startDateTime, String endDateTime, List<String> uris,
+                                           boolean unique) {
         Map<String, Object> parameters = Map.of(
                 "start", startDateTime,
                 "end", endDateTime,

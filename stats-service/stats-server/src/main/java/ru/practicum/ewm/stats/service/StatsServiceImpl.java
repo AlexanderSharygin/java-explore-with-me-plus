@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.HitDto;
 import ru.practicum.ewm.dto.StatsDto;
+import ru.practicum.ewm.exception.model.BadRequestException;
 import ru.practicum.ewm.stats.mapper.HitMapper;
 import ru.practicum.ewm.stats.model.App;
 import ru.practicum.ewm.stats.model.Hit;
@@ -24,6 +25,10 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public List<StatsDto> getStats(LocalDateTime startRange, LocalDateTime endRange, List<String> uris, boolean unique) {
+
+        if (startRange == null || endRange == null || startRange.isAfter(endRange) || startRange.equals(endRange)) {
+            throw new BadRequestException("Неверный диапазон дат для выгрузки статистики");
+        }
         List<StatsDto> stats;
         if (uris == null || uris.isEmpty()) {
             if (!unique) {
