@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.main.comment.dto.CommentCreateDto;
 import ru.practicum.ewm.main.comment.dto.CommentDto;
-import ru.practicum.ewm.main.comment.dto.CommentUpdateDto;
 import ru.practicum.ewm.main.comment.service.CommentService;
 
 import java.util.Collection;
@@ -59,9 +58,9 @@ public class CommentController {
     @GetMapping("events/{eventId}")
     @ResponseStatus(HttpStatus.OK)
     public Collection<CommentDto> getAllCommentsByEvent(@PathVariable Long eventId,
-                                                             @PathVariable Long userId,
-                                                             @RequestParam(defaultValue = "0") Integer from,
-                                                             @RequestParam(defaultValue = "10") Integer size) {
+                                                        @PathVariable Long userId,
+                                                        @RequestParam(defaultValue = "0") Integer from,
+                                                        @RequestParam(defaultValue = "10") Integer size) {
         return commentService.getAllCommentsByUserAndEvent(userId, eventId, from, size);
     }
 }
