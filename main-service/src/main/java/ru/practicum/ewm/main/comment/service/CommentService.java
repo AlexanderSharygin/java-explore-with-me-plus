@@ -45,7 +45,7 @@ public class CommentService {
 
     public Collection<CommentDto> getAllCommentsByUser(Long userId, Integer from, Integer size) {
         log.info("Get all comments for user id={}", userId);
-        return commentRepository.findAllByAuthor_IdOrderByPublishedOnDesc(userId, createPageable(from, size))
+        return commentRepository.findAllByAuthorIdOrderByPublishedOnDesc(userId, createPageable(from, size))
                 .stream()
                 .map(CommentMapper::toDto)
                 .toList();
@@ -53,7 +53,7 @@ public class CommentService {
 
     public Collection<CommentDto> getAllCommentsByUserAndEvent(Long userId, Long eventId, Integer from, Integer size) {
         log.info("Get all comments for event id={} and user id={}", eventId, userId);
-        return commentRepository.findAllByAuthor_IdAndEvent_IdOrderByPublishedOnDesc(userId, eventId, createPageable(from, size))
+        return commentRepository.findAllByAuthorIdAndEventIdOrderByPublishedOnDesc(userId, eventId, createPageable(from, size))
                 .stream()
                 .map(CommentMapper::toDto)
                 .toList();
