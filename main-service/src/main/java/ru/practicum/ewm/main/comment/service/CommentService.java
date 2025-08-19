@@ -1,12 +1,16 @@
 package ru.practicum.ewm.main.comment.service;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.main.comment.dto.CommentCreateDto;
 import ru.practicum.ewm.main.comment.dto.CommentDto;
+import ru.practicum.ewm.main.comment.dto.CommentUpdateDto;
 import ru.practicum.ewm.main.comment.mapper.CommentMapper;
 import ru.practicum.ewm.main.comment.model.Comment;
 import ru.practicum.ewm.main.comment.repository.CommentRepository;
@@ -17,8 +21,11 @@ import ru.practicum.ewm.main.exception.model.BadRequestException;
 import ru.practicum.ewm.main.exception.model.ConflictException;
 import ru.practicum.ewm.main.exception.model.ForbiddenException;
 import ru.practicum.ewm.main.exception.model.NotFoundException;
+
+import java.util.Collection;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @Transactional
 public class CommentService {
@@ -30,6 +37,28 @@ public class CommentService {
                           EventRepository eventRepository) {
         this.commentRepository = commentRepository;
         this.eventRepository = eventRepository;
+    }
+
+    public CommentDto getCommentById(Long commentId) {
+        log.info("Get comment with id={}", commentId);
+        return CommentMapper.toDto(commentRepository.findById(commentId).orElseThrow(() ->
+                new NotFoundException(String.format("Comment with id=%d was not found", commentId))));
+    }
+
+    public Collection<CommentDto> getAllCommentsByUser(Long userId, Integer from, Integer size) {
+        log.info("Get all comments for user id={}", userId);
+        return commentRepository.findAllByAuthor_IdOrderByPublishedOnDesc(userId, createPageable(from, size))
+                .stream()
+                .map(CommentMapper::toDto)
+                .toList();
+    }
+
+    public Collection<CommentDto> getAllCommentsByUserAndEvent(Long userId, Long eventId, Integer from, Integer size) {
+        log.info("Get all comments for event id={} and user id={}", eventId, userId);
+        return commentRepository.findAllByAuthor_IdAndEvent_IdOrderByPublishedOnDesc(userId, eventId, createPageable(from, size))
+                .stream()
+                .map(CommentMapper::toDto)
+                .toList();
     }
 
     public CommentDto create(Long userId, CommentCreateDto dto) {
@@ -93,5 +122,10 @@ public class CommentService {
             throw new ForbiddenException("You are not the author of this comment");
         }
         commentRepository.deleteById(commentId);
+    }
+
+    private Pageable createPageable(Integer from, Integer size) {
+        int pageNumber = from / size;
+        return PageRequest.of(pageNumber, size);
     }
 }
