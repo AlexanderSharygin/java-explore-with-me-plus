@@ -18,18 +18,18 @@ import static org.springframework.http.HttpStatus.*;
 @Slf4j
 public class ExceptionApiHandler {
 
-    @ExceptionHandler(ForbiddenException.class)
-    @ResponseStatus(FORBIDDEN)
-    public ErrorResponse handleForbidden(final ForbiddenException e) {
-        log.warn("ForbiddenException: {}", e.getMessage(), e);
-        return new ErrorResponse(e.getMessage(), "Forbidden", FORBIDDEN.toString());
-    }
-
     @ExceptionHandler(ConflictException.class)
     @ResponseStatus(CONFLICT)
     public ErrorResponse entityIsAlreadyExist(ConflictException exception) {
         log.warn("Entity is already exist", exception.getMessage(), exception.getStackTrace());
         return new ErrorResponse(exception.getMessage(), "Entity is already exist!", CONFLICT.toString());
+    }
+
+    @ExceptionHandler(PublicationException.class)
+    @ResponseStatus(CONFLICT)
+    public ErrorResponse PublicationIsNotExist(PublicationException exception) {
+        log.warn("Publication failed", exception.getMessage(), exception.getStackTrace());
+        return new ErrorResponse(exception.getMessage(), "Publication failed!", CONFLICT.toString());
     }
 
     @ExceptionHandler(NotFoundException.class)

@@ -2,10 +2,7 @@ package ru.practicum.ewm.main.comment.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -13,12 +10,13 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentUpdateDto {
-    @NotNull(message = "Event id is required")
-    Long eventId;
+public class MergeCommentRequest {
 
-    @NotBlank(message = "Text is required")
-    String text;
+    @NotNull
+    private Long eventId;
+
+    @NotBlank
+    private String text;
 
     @Builder.Default
     LocalDateTime createdAt = LocalDateTime.now();

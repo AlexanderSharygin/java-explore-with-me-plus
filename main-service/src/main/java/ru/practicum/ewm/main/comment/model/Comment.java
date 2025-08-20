@@ -2,6 +2,8 @@ package ru.practicum.ewm.main.comment.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ru.practicum.ewm.main.event.model.Event;
+import ru.practicum.ewm.main.user.model.User;
 
 import java.time.LocalDateTime;
 
@@ -18,13 +20,15 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "event_id", nullable = false)
-    private Long eventId;
+    @JoinColumn(name = "event_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Event event;
 
-    @Column(name = "author_id", nullable = false)
-    private Long authorId;
+    @JoinColumn(name = "author_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User author;
 
-    @Column(nullable = false, length = 1000)
+    @Column(nullable = false)
     private String text;
 
     @Column(name = "created_at", nullable = false)

@@ -1,6 +1,10 @@
 package ru.practicum.ewm.main.comment.dto;
 
 import lombok.*;
+import ru.practicum.ewm.main.event.dto.EventDto;
+import ru.practicum.ewm.main.event.dto.EventShortDto;
+import ru.practicum.ewm.main.user.dto.UserDto;
+import ru.practicum.ewm.main.user.dto.UserShortDto;
 
 import java.time.LocalDateTime;
 
@@ -11,8 +15,8 @@ import java.time.LocalDateTime;
 @Builder
 public class CommentDto {
     private Long id;
-    private Long eventId;
-    private Long authorId;
+    private EventShortDto event;
+    private UserShortDto author;
     private String text;
     private LocalDateTime createdAt;
 }

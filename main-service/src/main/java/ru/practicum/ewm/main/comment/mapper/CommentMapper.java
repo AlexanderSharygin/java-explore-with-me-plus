@@ -1,28 +1,25 @@
 package ru.practicum.ewm.main.comment.mapper;
 
-import lombok.NoArgsConstructor;
-import ru.practicum.ewm.main.comment.dto.CommentCreateDto;
+import org.mapstruct.*;
 import ru.practicum.ewm.main.comment.dto.CommentDto;
+import ru.practicum.ewm.main.comment.dto.MergeCommentRequest;
 import ru.practicum.ewm.main.comment.model.Comment;
+import ru.practicum.ewm.main.event.model.Event;
+import ru.practicum.ewm.main.user.model.User;
 
-@NoArgsConstructor
-public class CommentMapper {
+@Mapper
+public interface CommentMapper {
+    @Mapping(target = "author", source = "user")
+    @Mapping(target = "event", source = "event")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "publishedOn", source = "commentRequest.publishedOn")
+    Comment requestToComment(MergeCommentRequest commentRequest, Event event, User user);
 
-    public static Comment toEntity(Long authorId, CommentCreateDto dto) {
-        Comment c = new Comment();
-        c.setEventId(dto.getEventId());
-        c.setAuthorId(authorId);
-        c.setText(dto.getText());
-        return c;
-    }
+    CommentDto commentToResponse(Comment comment);
 
-    public static CommentDto toDto(Comment c) {
-        return CommentDto.builder()
-                .id(c.getId())
-                .eventId(c.getEventId())
-                .authorId(c.getAuthorId())
-                .text(c.getText())
-                .createdAt(c.getCreatedAt())
-                .build();
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "event", source = "event")
+    @Mapping(target = "publishedOn", source = "commentRequest.publishedOn")
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateComment(MergeCommentRequest commentRequest, Event event, @MappingTarget Comment comment);
 }
