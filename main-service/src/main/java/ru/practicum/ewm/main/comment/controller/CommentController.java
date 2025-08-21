@@ -49,7 +49,7 @@ public class CommentController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<CommentDto> getAllCommentsByUser(@PathVariable Long userId,
+    public Collection<CommentDto> getAllCommentsByUser(@RequestHeader(USER_HEADER) Long userId,
                                                        @RequestParam(defaultValue = "0") Integer from,
                                                        @RequestParam(defaultValue = "10") Integer size) {
         return commentService.getAllCommentsByUser(userId, from, size);
@@ -58,7 +58,7 @@ public class CommentController {
     @GetMapping("events/{eventId}")
     @ResponseStatus(HttpStatus.OK)
     public Collection<CommentDto> getAllCommentsByEvent(@PathVariable Long eventId,
-                                                        @PathVariable Long userId,
+                                                        @RequestHeader(USER_HEADER) Long userId,
                                                         @RequestParam(defaultValue = "0") Integer from,
                                                         @RequestParam(defaultValue = "10") Integer size) {
         return commentService.getAllCommentsByUserAndEvent(userId, eventId, from, size);
