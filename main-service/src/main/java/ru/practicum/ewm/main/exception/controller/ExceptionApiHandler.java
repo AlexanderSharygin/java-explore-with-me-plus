@@ -27,7 +27,7 @@ public class ExceptionApiHandler {
 
     @ExceptionHandler(PublicationException.class)
     @ResponseStatus(CONFLICT)
-    public ErrorResponse PublicationIsNotExist(PublicationException exception) {
+    public ErrorResponse publicationIsNotExist(PublicationException exception) {
         log.warn("Publication failed", exception.getMessage(), exception.getStackTrace());
         return new ErrorResponse(exception.getMessage(), "Publication failed!", CONFLICT.toString());
     }
