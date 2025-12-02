@@ -13,7 +13,8 @@ import org.springframework.context.annotation.Bean;
         "ru.practicum.ewm.main.exception",
         "ru.practicum.ewm.main.request",
         "ru.practicum.ewm.main.compilation",
-        "ru.practicum.ewm.main.user"})
+        "ru.practicum.ewm.main.user",
+        "ru.practicum.ewm.main.comment"})
 public class MainService {
     public static void main(String[] args) {
         SpringApplication.run(MainService.class, args);

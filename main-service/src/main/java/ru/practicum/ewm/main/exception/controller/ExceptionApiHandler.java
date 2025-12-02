@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
-import ru.practicum.ewm.main.exception.model.BadRequestException;
-import ru.practicum.ewm.main.exception.model.ConflictException;
-import ru.practicum.ewm.main.exception.model.ErrorResponse;
-import ru.practicum.ewm.main.exception.model.NotFoundException;
+import ru.practicum.ewm.main.exception.model.*;
 
 import java.util.List;
 
@@ -26,6 +23,13 @@ public class ExceptionApiHandler {
     public ErrorResponse entityIsAlreadyExist(ConflictException exception) {
         log.warn("Entity is already exist", exception.getMessage(), exception.getStackTrace());
         return new ErrorResponse(exception.getMessage(), "Entity is already exist!", CONFLICT.toString());
+    }
+
+    @ExceptionHandler(PublicationException.class)
+    @ResponseStatus(CONFLICT)
+    public ErrorResponse publicationIsNotExist(PublicationException exception) {
+        log.warn("Publication failed", exception.getMessage(), exception.getStackTrace());
+        return new ErrorResponse(exception.getMessage(), "Publication failed!", CONFLICT.toString());
     }
 
     @ExceptionHandler(NotFoundException.class)
